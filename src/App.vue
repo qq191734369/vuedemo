@@ -23,13 +23,11 @@
           <div class="user-info-content">
             <div class="user-info">
               <span class="user-name">{{username}} , 你好</span>
-              <button class="btn login-btn navbar-btn" @click="handleLoginShow">登录</button>
               <button class="btn login-btn navbar-btn" @click="handleLoginShow">注销</button>
             </div>
           </div>
           
         </div>
-        
       </div>
     </nav>
     <div class="container">

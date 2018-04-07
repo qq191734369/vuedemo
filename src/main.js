@@ -11,7 +11,6 @@ Vue.config.productionTip = false;
 import '../node_modules/bootstrap/dist/js/bootstrap.js'
 //引入图标字体
 import '../static/iconfont/iconfont.css'
-
 //引入表单校验
 import VeeValidate from 'vee-validate';
 Vue.use(VeeValidate)
