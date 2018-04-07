@@ -18,8 +18,10 @@ Vue.use(VeeValidate)
 //引入公共组件
 import Model from './components/commen/model.vue'
 import NavRoute from './components/commen/NavRoute.vue'
+import MySelect from './components/commen/myselect.vue'
 Vue.component('model',Model);
 Vue.component('nav-route',NavRoute);
+Vue.component('my-select',MySelect);
 
 router.beforeEach((to, from, next) => {
   console.log(to);

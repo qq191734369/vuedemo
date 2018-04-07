@@ -8,26 +8,59 @@
     </div>
     <div class="safe-body">
       <div class="row list-item">
-        <div class="col-sm-4">
+        <div class="col-sm-6 col-xs-6">
           <i class="iconfont icon-addressbook" style="color:green"></i>
           昵称 : </div>
-        <div class="col-sm-5">{{username}}</div>
-        <div class="col-sm-3"><a href="#">修改</a></div>
+        <div class="col-sm-6 col-xs-6">{{form.nickname}}</div>
+        <!-- <div class="col-sm-3"><a href="#">修改</a></div> -->
       </div>
       <div class="row list-item">
-        <div class="col-sm-4"><i class="iconfont icon-coordinates" style="color:orange"></i>绑定邮箱 : </div>
-        <div class="col-sm-5">{{email}}</div>
-        <div class="col-sm-3"><a href="#">绑定</a></div>
+        <div class="col-sm-6 col-xs-6">
+          <i class="iconfont icon-addressbook" style="color:green"></i>
+          性别 : </div>
+        <div class="col-sm-6 col-xs-6 middle-container">
+          <div class="middle-item">
+            <my-select :selectValue='form.gender' :dataList='genderList'></my-select>
+          </div>
+        </div>
       </div>
       <div class="row list-item">
-        <div class="col-sm-4"><i class="iconfont icon-emoji" style="color:red"></i>绑定手机 : </div>
-        <div class="col-sm-5">{{phone}}</div>
-        <div class="col-sm-3"><a href="#">绑定</a></div>
+        <div class="col-sm-6 col-xs-6"><i class="iconfont icon-coordinates" style="color:orange"></i>年龄 : </div>
+        <div class="col-sm-6 col-xs-6">{{form.age}}</div>
+        <!-- <div class="col-sm-3"><a href="#">绑定</a></div> -->
       </div>
       <div class="row list-item">
-        <div class="col-sm-4"><i class="iconfont icon-lichengdixian" style="color:purple"></i>菜鸡等级 : </div>
-        <div class="col-sm-5"><span class="level">{{lv}}</span></div>
-        <div class="col-sm-3"><a href="#">绑定</a></div>
+        <div class="col-sm-6 col-xs-6"><i class="iconfont icon-emoji" style="color:red"></i>星座 : </div>
+        <div class="col-sm-6 col-xs-6">{{form.constellation}}</div>
+        <!-- <div class="col-sm-3"><a href="#">绑定</a></div> -->
+      </div>
+      <div class="row list-item">
+        <div class="col-sm-6 col-xs-6"><i class="iconfont icon-lichengdixian" style="color:purple"></i>学校 : </div>
+        <div class="col-sm-6 col-xs-6">{{form.school}}</div>
+        <!-- <div class="col-sm-3"><a href="#">绑定</a></div> -->
+      </div>
+      <div class="row list-item">
+        <div class="col-sm-6 col-xs-6">
+          <i class="iconfont icon-addressbook" style="color:green"></i>
+          爱好 : </div>
+        <div class="col-sm-6 col-xs-6">{{form.hobby}}</div>
+      </div>
+      <div class="row list-item">
+        <div class="col-sm-6 col-xs-6">
+          <i class="iconfont icon-addressbook" style="color:green"></i>
+          省份 : </div>
+        <div class="col-sm-6 col-xs-6">{{form.province}}</div>
+      </div>
+      <div class="row list-item">
+        <div class="col-sm-6 col-xs-6">
+          <i class="iconfont icon-addressbook" style="color:green"></i>
+          个性签名 : </div>
+        <div class="col-sm-6 col-xs-6">{{form.signnture}}</div>
+      </div>
+    </div>
+    <div class="safe-footer">
+      <div class="btn-group">
+        <button class="btn save-btn" @click="Save">保存</button>
       </div>
     </div>
   </div>
@@ -39,11 +72,32 @@ export default {
       return {
           my:'zyl',
           score:60,
-          username:'qq191919191',
-          email:'191712@qq.com',
-          phone:'18811395605',
-          lv:'6'
+          form:{
+            nickname:'惊了',
+            gender:1,
+            age:'16',
+            constellation:'水平',
+            school:'学校',
+            hobby:'爱好',
+            province:'辽宁',
+            signnture:'我tm射爆'
+          },
+          genderList:[
+            {
+              value:1,
+              label:'男'
+            },
+            {
+              value:2,
+              label:'女'
+            }
+          ]
       }
+  },
+  methods:{
+    Save(){
+      alert('妈耶')
+    }
   }
 }
 </script>
@@ -58,6 +112,9 @@ export default {
   width: 400px;
   height: 220px;
   margin: 0  auto 50px;
+  padding-top: 30px;
+  box-sizing: content-box;
+  background-origin: content-box;
 }
 .safe-score{
   text-align: center;
@@ -85,6 +142,10 @@ export default {
   height: 80px;
   line-height: 80px;
   border-top: 1px solid rgb(231, 230, 230); 
+  position: relative;
+}
+.list-item:last-child{
+  /* border-bottom: 1px solid rgb(231, 230, 230);  */
 }
 .iconfont{
   font-size: 20px;
@@ -94,5 +155,29 @@ export default {
 .level{
   font-size: 20px;
   font-weight: 600;
+}
+.safe-footer{
+  padding:15px;
+  margin-bottom: 50px;
+  text-align: center;
+}
+.save-btn{
+  margin: auto;
+  float: none;
+  background-color: rgb(40, 134, 228);
+  color: white;
+}
+.save-btn:hover{
+  opacity: .8;
+}
+.middle-container{
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+.middle-item{
+  position: absolute; 
+  top: 50%;
+  transform: translateY(-50%);
 }
 </style>
