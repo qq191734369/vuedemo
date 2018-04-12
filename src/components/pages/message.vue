@@ -11,6 +11,9 @@ export default {
     return {
       msg: '消息中心'
     }
+  },
+  created(){
+    this.$store.commit('changeNav',2)
   }
 }
 </script>

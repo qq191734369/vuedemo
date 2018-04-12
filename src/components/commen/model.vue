@@ -4,9 +4,11 @@
     <transition name="fade">
         <div class="mymodel-dialog" v-if="isShow">
             <div class="mydialog-header clear-fix">
-                <div class="dialog-header-item">登录</div>
+                <div class="dialog-header-item">
+                    <h4>{{title}}</h4> 
+                </div>
                 <!-- <div class="dialog-header-item"> -->
-                    <button @click="handleCloseBtn" class="close-btn">x</button>
+                <button @click="handleCloseBtn" class="close-btn">x</button>
                 <!-- </div> -->
             </div>
             <div class="mydialog-body">
@@ -21,6 +23,7 @@
  * 模态框组件
  * @param isShow 控制组件显示，由父组件传入
  * @param isCloseable 是否可以点击mask关闭模态框
+ * @param title 标题
  * *******************************/ 
 import event from '../../js/event';
 export default {
@@ -33,6 +36,9 @@ export default {
         isCloseable:{
             type:Boolean,
             default:true
+        },
+        title:{
+            default:'标题'
         }
     },
     data(){

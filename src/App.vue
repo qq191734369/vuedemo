@@ -22,8 +22,9 @@
           </ul>
           <div class="user-info-content">
             <div class="user-info">
-              <span class="user-name">{{username}} , 你好</span>
-              <button class="btn login-btn navbar-btn" @click="handleLoginShow">注销</button>
+              <span class="user-name">{{computeNickname}} , 你好</span>
+              <button class="btn login-btn navbar-btn" @click="handleLoginShow">修改密码</button>
+              <button class="btn login-btn navbar-btn" @click="handleLogout">注销</button>
             </div>
           </div>
           
@@ -38,9 +39,9 @@
               <button class="btn">菜单</button>
             </div> -->
             <ul class="nav nav-pills  nav-stacked main-nav" @click="HandelNavPillCilck($event)">
-              <li role="presentation" :class="{'active':page==0}" value="0" class="nav-item">个人中心</li>
-              <li role="presentation" :class="{'active':page==1}" value="1" class="nav-item">聊天室</li>
-              <li role="presentation" :class="{'active':page==2}" value="2" class="nav-item">消息中心</li>
+              <li role="presentation" :class="{'active':computeNavValue==0}" value="0" class="nav-item">个人中心</li>
+              <li role="presentation" :class="{'active':computeNavValue==1}" value="1" class="nav-item">聊天室</li>
+              <li role="presentation" :class="{'active':computeNavValue==2}" value="2" class="nav-item">消息中心</li>
             </ul>
           <!-- </div> -->
         </div>
@@ -53,17 +54,17 @@
       </div>
     </div>
     <!-- 模态框 -->
-    <model :isShow='logDialogShow' @close-dialog ="handleLoginHide" :isCloseable="true">
+    <model :isShow='logDialogShow' @close-dialog ="handleLoginHide" :isCloseable="true" :title="'修改密码'">
       <div slot="body-content">
          <form class="form-horizontal">
           <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">账号</label>
+            <label for="inputEmail3" class="col-sm-2 control-label">原密码：</label>
             <div class="col-sm-10">
-              <input type="email" 
+              <input type="password" 
                 class="form-control" 
                 id="inputEmail3" 
-                placeholder="Email" 
-                v-model="form.phoneNumber"
+                placeholder="请输入旧密码" 
+                v-model="form.password"
                 v-validate="'required'"
                 name = 'phone'
                 :class="{'err-input':errors.has('phone')}">
@@ -71,13 +72,13 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="inputPassword3" class="col-sm-2 control-label">密码</label>
+            <label for="inputPassword3" class="col-sm-2 control-label">新密码：</label>
             <div class="col-sm-10">
               <input type="password" 
               class="form-control" 
               id="inputPassword3" 
-              placeholder="Password" 
-              v-model="form.password"
+              placeholder="请输入新密码" 
+              v-model="form.newPassword"
               v-validate="'required'"
               name='password'
               :class="{'err-input':errors.has('password')}"
@@ -87,21 +88,13 @@
           </div>
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox">记住我
-                </label>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-              <button type="submit" class="btn btn-default" @click.prevent="handleSubmit">Sign in</button>
+              <button type="submit" class="btn btn-default" @click.prevent="handleSubmit">确定</button>
             </div>
           </div>
         </form>
       </div>
     </model>
+    <my-scroll></my-scroll>
   </div>
 </template>
 
@@ -117,22 +110,51 @@ export default {
       logDialogShow: false,
       username: 'qq191734369',
       form:{
-        phoneNumber:'',
-        password:''
+        password:'',
+        newPassword:''
       },
-      page:0
+      page:0,
     }
   },
   created(){
-
+    let isLogin = this.$store.getters.getLogState;
+    console.log(isLogin)
+    // this.$store.dispatch('getUserInfoFromServer',this.baseurl2 + '/myproject/getUserInfo')
+    console.log(this.$store.getters.getUserInfo)
+    //获取用户信息
+    // $.ajax({
+    //   type: 'get',
+    //   url:this.baseurl2+ '/myproject/getUserInfo',
+    //   dataType:'json',
+    //   context:this,
+    //   success:function(res){
+    //     if(res != null){
+    //       if(res.nickname == null){
+    //         this.username = '匿名用户'
+    //       }else{
+    //         this.username = res.nickname;
+    //       }
+    //     }
+    //   }
+    // });
+    //获取当前页面路径
   },
   methods:{
     HandelNavPillCilck(e){
+      //根据nav的value改变右侧导航哪个亮，value从0开始
       let $target = $(e.target);
       let value = $target.val();
       if(value != undefined || value != null){
+        this.$store.commit('changeNav',value)
         this.page = value;
         this.$router.push({name:routerArr[this.page]})
+        if(value==0){
+          this.pagePath = ['菜的抠脚','个人中心'];
+        }else if(value == 1){
+          this.pagePath = ['菜的抠脚','聊天室']
+        }else if(value == 2){
+          this.pagePath =['菜的抠脚','消息中心']
+        }
       } 
     },
     handleLoginShow(){
@@ -142,23 +164,37 @@ export default {
       this.logDialogShow = false;
     },
     handleSubmit(){
-      console.log('6666')
       this.$validator.validateAll().then((result) => {
         if (result) {
           $.ajax({
-            type: 'POST',
-            url:'http://10.108.144.60:8080/myproject/register',
-            data: this.form,
-            success:function(res){
-              if(res.status == 100){
-                console.log(res.message);
-              }
-            }
+              type:'post',
+              url: this.baseurl2 + '/myproject/update',
+              data:this.form,
+              dataType:'json',
+              success:function(res){
+                console.log(res)
+                if(res.status == 10000){
+                  alert('修改成功')
+                  this.logDialogShow = false;
+                }else{
+                  alert('密码错误')
+                }
+              }  
           })
-          this.logDialogShow = false;
           return;
         }
       });
+    },
+    handleLogout(){
+      window.location.href = this.baseurl2 + '/myproject/logout'
+    }
+  },
+  computed:{
+    computeNavValue(){
+      return this.$store.getters.getNavValue
+    },
+    computeNickname(){
+      return this.$store.getters.getNickName
     }
   }
 }

@@ -3,7 +3,7 @@
       <div class="ccol-xs-12 col-sm-9 ">
         <div class="chat-room">
           <div class="message-window" v-for="(item,index) in messageList" :key="index">
-            <div class="message-item">
+            <div class="message-item" v-if="item.from != 3">
               <div class="left-msg">
                 <div class="msg-content">
                   <img src="http://placehold.it/50x50" alt="" class="avatar">
@@ -18,6 +18,9 @@
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="notice-item" v-else>
+              <span>{{item.msg}}</span>
             </div>
           </div>
         </div>
@@ -36,7 +39,7 @@
           <div class="list-item" v-for="(item,index) in userList" :key="index">
             <div class="list-item-1"><img src="http://placehold.it/20x20" alt="" class="avartar-small"></div>
             <span class="list-item-1">
-              {{item.name}}
+              {{item}}
             </span>
           </div>
         </div> 
@@ -45,6 +48,9 @@
 </template>
 
 <script>
+import Socket from '../../js/socket'
+import myevent from '../../js/event'
+import bus from '../../js/eventbus'
 export default {
   name: 'HelloWorld',
   data () {
@@ -52,27 +58,64 @@ export default {
       message:'',
       msg: '聊天室',
       messageList:[
-        {
-          name:'赵日天',
-          msg:'我tm射爆大文件大胜靠德几千万【 驱蚊器翁群翁群翁群二群翁群二群翁群翁群翁群翁群翁群二群翁',
-          time:new Date().toLocaleString(),
-          from:2
-        },
-        {
-          name:'叶良辰',
-          msg:'螺旋爆炸',
-          time:new Date().toLocaleString(),
-          from:2
-        },
+        // {
+        //   name:'赵日天',
+        //   msg:'我tm射爆大文件大胜靠德几千万【 驱蚊器翁群翁群翁群二群翁群二群翁群翁群翁群翁群翁群二群翁',
+        //   time:new Date().toLocaleString(),
+        //   from:2
+        // }
+        // from: 1----自己发的，2----别人发的，3----系统消息
       ],
       userList:[
-        {
-          name:'赵日天'
-        },
-        {
-          name:'叶良辰'
+      ],
+      socket:''
+    }
+  },
+  created(){
+    let self = this;
+    console.log(this.computeNickname)
+    this.$store.commit('changeNav',1)
+    //建立socket连接
+    let target = this.baseurl + "/myproject/chatSocket?"+"username="+`${this.computeNickname}`;
+    this.socket = new Socket().create(target);
+    console.log(this.socket)
+    this.socket.onmessage = function(e){
+      let data = JSON.parse(e.data);
+      console.log(data)
+      //用户列表
+      if(data.users){
+        self.userList = data.users;
+      }
+      let from,msg;
+      if(data.alert){
+        from = 3;
+        msg = data.alert;
+      }else if(data.message){
+        //判断收到
+        if(data.from == self.computeNickname){
+          from = 1;
+        }else{
+          from = 2;
         }
-      ]
+        msg = data.message;
+      }
+      //更新列表
+      self.messageList.push({
+        name:data.from,
+        msg:msg,
+        time:data.date,
+        from:from
+      });
+      self.ScrollChatRoom();
+    }
+    this.socket.onopen = function(){
+      alert('sokect建立成功')
+    }
+    this.socket.onerror = function(){
+      alert('socket建立失败')
+    }
+    this.socket.onclose = function(){
+      alert('socket连接关闭')
     }
   },
   methods:{
@@ -81,19 +124,34 @@ export default {
         message: this.message
       }).then((result) => {
         if (result) {
-          this.messageList.push({
-            name:'匿名用户',
-            msg:this.message,
-            time:new Date().toLocaleString(),
-            from:1
-          });
+          this.socket.send(this.message);
           this.message = '';
           return;
         }
         console.log('Oops!');
       });
       
+    },
+    RunSocket(){
+      
+    },
+    ScrollChatRoom(){
+      let room = document.querySelector('.chat-room')
+      if(room == null || room == undefined) return
+      let roomscroll = room.scrollTop;
+      let roomheight = room.clientHeight;
+      let fullheight = room.scrollHeight;
+      if(fullheight>roomheight){
+        room.scrollTop = fullheight-roomheight;
+      }
     }
+  },
+  computed:{
+    computeNickname(){
+      return this.$store.getters.getNickName
+    }
+  },
+  destroyed(){
   }
 }
 </script>
@@ -216,5 +274,25 @@ a {
   word-break:keep-all; 
   text-overflow:ellipsis;
   overflow: hidden;
+}
+.notice-item{
+  background-color:rgb(202, 198, 198);
+  color: white;
+  display: table;
+  margin: 0 auto;
+  padding: 3px 5px;
+  border-radius: 5px;
+  word-break: break-all;
+}
+@media screen and (max-width:540px){
+  .msg{
+    max-width: 200px;
+  }
+  .name,.time{
+    font-size: 9px;
+  }
+  .time{
+    padding: 0;
+  }
 }
 </style>
