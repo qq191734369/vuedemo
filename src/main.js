@@ -33,7 +33,7 @@ Vue.prototype.baseurl2 = 'http://123.206.42.95';
 //引入vuex状态管理
 import store from './js/store'
 
-store.dispatch('getUserInfoFromServer', Vue.prototype.baseurl2 + '/myproject/getUserInfo')
+store.dispatch('getUserInfoFromServer', Vue.prototype.baseurl2 + '/myproject/getUserInfo') //这是一个同步ajax方法，获取登录用户的全部信息，获取成功之后才会进行接下来的操作
 
 router.beforeEach((to, from, next) => {
   console.log(to);

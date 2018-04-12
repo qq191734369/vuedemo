@@ -75,6 +75,7 @@ export default {
     let self = this;
     console.log(this.computeNickname)
     this.$store.commit('changeNav',1)
+    bus.$on(myevent.ON_RECEIVE_MSG,self.ScrollChatRoom)
     //建立socket连接
     let target = this.baseurl + "/myproject/chatSocket?"+"username="+`${this.computeNickname}`;
     this.socket = new Socket().create(target);
@@ -106,7 +107,7 @@ export default {
         time:data.date,
         from:from
       });
-      self.ScrollChatRoom();
+      bus.$emit(myevent.ON_RECEIVE_MSG);
     }
     this.socket.onopen = function(){
       alert('sokect建立成功')
@@ -136,14 +137,16 @@ export default {
       
     },
     ScrollChatRoom(){
-      let room = document.querySelector('.chat-room')
-      if(room == null || room == undefined) return
-      let roomscroll = room.scrollTop;
-      let roomheight = room.clientHeight;
-      let fullheight = room.scrollHeight;
-      if(fullheight>roomheight){
-        room.scrollTop = fullheight-roomheight;
-      }
+      this.$nextTick(function(){
+        let room = document.querySelector('.chat-room')
+        if(room == null || room == undefined) return
+        let roomscroll = room.scrollTop;
+        let roomheight = room.clientHeight;
+        let fullheight = room.scrollHeight;
+        if(fullheight>roomheight){
+          $(room).animate({scrollTop:fullheight},200)
+        }
+      })
     }
   },
   computed:{
@@ -152,6 +155,7 @@ export default {
     }
   },
   destroyed(){
+    bus.$off(myevent.ON_RECEIVE_MSG,this.ScrollChatRoom)
   }
 }
 </script>
