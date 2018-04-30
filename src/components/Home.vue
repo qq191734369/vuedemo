@@ -332,6 +332,10 @@ export default {
   position: absolute; 
   top: 50%;
   transform: translateY(-50%);
+  -ms-transform:translateY(-50%); 	/* IE 9 */
+  -moz-transform:translateY(-50%);	/* Firefox */
+  -webkit-transform:translateY(-50%); /* Safari 和 Chrome */
+  -o-transform:translateY(-50%);	/* Opera */
 }
 .my-input{
   display: inline-block;

@@ -156,6 +156,7 @@ export default {
   },
   destroyed(){
     bus.$off(myevent.ON_RECEIVE_MSG,this.ScrollChatRoom)
+    this.socket.close();
   }
 }
 </script>
@@ -240,6 +241,10 @@ a {
   width: 20px;
   height: 20px;
   transform: rotate(45deg);
+  -ms-transform:rotate(45deg); 	/* IE 9 */
+  -moz-transform:rotate(45deg);	/* Firefox */
+  -webkit-transform:rotate(45deg); /* Safari 和 Chrome */
+  -o-transform:rotate(45deg);	/* Opera */
   background-color: white;
   top:5px;
   left:-6px;

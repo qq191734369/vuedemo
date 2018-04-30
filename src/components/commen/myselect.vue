@@ -76,6 +76,10 @@ export default {
     height: 10px;
     width: 10px;
     transform: rotate(45deg) translateX(-100%);
+    -ms-transform:rotate(45deg) translateX(-100%); 	/* IE 9 */
+    -moz-transform:rotate(45deg) translateX(-100%); 	/* Firefox */
+    -webkit-transform:rotate(45deg) translateX(-100%); /* Safari 和 Chrome */
+    -o-transform:rotate(45deg) translateX(-100%);	/* Opera */
     border-right: 2px solid grey;
     border-bottom: 2px solid grey;
     position: absolute;

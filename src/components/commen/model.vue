@@ -127,12 +127,26 @@ export default {
 }
 .fade-enter-to, .fade-leave {
   transition: all .5s;
+  -moz-transition:all .5s; /* Firefox 4 */
+  -webkit-transition: all .5s; /* Safari 和 Chrome */
+  -o-transition: all .5s; /* Opera */
   transform: translateY(0);
+  -ms-transform:translateY(0); 	/* IE 9 */
+  -moz-transform:translateY(0); 	/* Firefox */
+  -webkit-transform:translateY(0); /* Safari 和 Chrome */
+  -o-transform:translateY(0); 	/* Opera */
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
   transform: translateY(-500px);
-  transition: all 0.5s;
+  -ms-transform:translateY(-500px); 	/* IE 9 */
+  -moz-transform:translateY(-500px); 	/* Firefox */
+  -webkit-transform:translateY(-500px); /* Safari 和 Chrome */
+  -o-transform:translateY(-500px); 	/* Opera */
+  transition: all .5s;
+  -moz-transition:all .5s; /* Firefox 4 */
+  -webkit-transition: all .5s; /* Safari 和 Chrome */
+  -o-transition: all .5s; /* Opera */
 }
 </style>
 
